@@ -1,43 +1,25 @@
 class ImageUniverse {
-  String? date;
-  String? explanation;
-  String? hdurl;
-  String? mediaType;
-  String? serviceVersion;
-  String? title;
-  String? url;
+  final String url;
+  final String title;
+  final String date;
+  final String explanation;
+  final String? copyright;
 
   ImageUniverse({
-    date,
-    explanation,
-    hdurl,
-    mediaType,
-    serviceVersion,
-    title,
-    url,
+    required this.url,
+    required this.title,
+    required this.date,
+    required this.explanation,
+    this.copyright,
   });
 
   factory ImageUniverse.fromJson(Map<String, dynamic> json) {
     return ImageUniverse(
+      url: json['url'],
+      title: json['title'],
       date: json['date'],
       explanation: json['explanation'],
-      hdurl: json['hdurl'],
-      mediaType: json['media_type'],
-      serviceVersion: json['service_version'],
-      title: json['title'],
-      url: json['url'],
+      copyright: json['copyright'] ?? 'Não informado',
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'date': date,
-      'explanation': explanation,
-      'hdurl': hdurl,
-      'media_type': mediaType,
-      'service_version': serviceVersion,
-      'title': title,
-      'url': url,
-    };
   }
 }
