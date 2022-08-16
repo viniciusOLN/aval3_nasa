@@ -1,10 +1,5 @@
-import 'dart:html';
-
-import 'package:aval3_nasa/app/data/datasource/planet_datasource.dart';
-import 'package:aval3_nasa/app/data/models/image_planetary_model.dart';
 import 'package:aval3_nasa/app/pages/homepage/widgets/image_card_widget.dart';
 import 'package:flutter/material.dart';
-
 import '../../data/repository/planet_repository.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,9 +17,20 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Galeria do Universo'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  quantityImages = 20;
+                  ImplPlanetDataSource.getRandomImages(quantityImages);
+                });
+              },
+              icon: const Icon(Icons.refresh)),
+        ],
       ),
       body: Column(
         children: [
+          SizedBox(height: 20),
           Text('Quantidade de imagens: $quantityImages'),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -51,6 +57,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+          SizedBox(height: 30),
           Expanded(
             child: FutureBuilder(
               future: ImplPlanetDataSource.getRandomImages(quantityImages),
@@ -59,12 +66,43 @@ class _HomePageState extends State<HomePage> {
                   case ConnectionState.none:
                     return const Text('sem conexao');
                   case ConnectionState.done:
-                    return ListView.builder(
-                        itemCount: quantityImages,
-                        itemBuilder: (context, index) {
-                          print(snapshot.data[index].url);
-                          return CardTile(infosPlanet: snapshot.data[index]);
-                        });
+                    if (snapshot.hasData) {
+                      return RefreshIndicator(
+                          child: ListView.builder(
+                            itemCount: quantityImages,
+                            itemBuilder: (context, index) {
+                              return CardTile(
+                                  infosPlanet: snapshot.data[index]);
+                            },
+                          ),
+                          onRefresh: () {
+                            setState(() {
+                              quantityImages = 20;
+                            });
+                            return ImplPlanetDataSource.getRandomImages(
+                                quantityImages);
+                          });
+                    }
+                    return Column(
+                      children: [
+                        Text('Erro ao acessar a API'),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  ImplPlanetDataSource.getRandomImages(
+                                      quantityImages);
+                                });
+                              },
+                              child: Text('Atualizar lista.'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
                   case ConnectionState.active:
                   case ConnectionState.waiting:
                     return Container(
