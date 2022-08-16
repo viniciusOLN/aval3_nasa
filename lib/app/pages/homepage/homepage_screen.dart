@@ -1,6 +1,10 @@
-import 'package:aval3_nasa/app/pages/homepage/widgets/image_card_widget.dart';
+import 'package:aval3_nasa/app/pages/homepage/widgets/handle_error_widget.dart';
+import 'package:aval3_nasa/app/pages/homepage/widgets/list_images_widget.dart';
 import 'package:flutter/material.dart';
 import '../../data/repository/planet_repository.dart';
+import '../../utils/widgets/loading_widget.dart';
+import 'widgets/appbar_widget.dart';
+import 'widgets/quantity_options_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,103 +19,65 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Galeria do Universo'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  quantityImages = 20;
-                  ImplPlanetDataSource.getRandomImages(quantityImages);
-                });
-              },
-              icon: const Icon(Icons.refresh)),
-        ],
+      appBar: AppBarWidget(
+        onPressed: () {
+          setState(() {
+            quantityImages = 20;
+            ImplPlanetDataSource.getRandomImages(quantityImages);
+          });
+        },
       ),
       body: Column(
         children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Text('Quantidade de imagens: $quantityImages'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed: () {
-                  if (quantityImages < 20) {
-                    setState(() {
-                      quantityImages++;
-                    });
-                  }
-                },
-                icon: const Icon(Icons.add),
-              ),
-              IconButton(
-                onPressed: () {
-                  if (quantityImages > 1) {
-                    setState(() {
-                      quantityImages--;
-                    });
-                  }
-                },
-                icon: const Icon(Icons.remove),
-              ),
-            ],
+          QuantityOptions(
+            onPressedPlus: () {
+              if (quantityImages < 20) {
+                setState(() {
+                  quantityImages++;
+                });
+              }
+            },
+            onPressedRemove: () {
+              if (quantityImages > 1) {
+                setState(() {
+                  quantityImages--;
+                });
+              }
+            },
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           Expanded(
             child: FutureBuilder(
               future: ImplPlanetDataSource.getRandomImages(quantityImages),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return const Text('sem conexao');
-                  case ConnectionState.done:
-                    if (snapshot.hasData) {
-                      return RefreshIndicator(
-                          child: ListView.builder(
-                            itemCount: quantityImages,
-                            itemBuilder: (context, index) {
-                              return CardTile(
-                                  infosPlanet: snapshot.data[index]);
-                            },
-                          ),
-                          onRefresh: () {
-                            setState(() {
-                              quantityImages = 20;
-                            });
-                            return ImplPlanetDataSource.getRandomImages(
-                                quantityImages);
-                          });
-                    }
-                    return Column(
-                      children: [
-                        Text('Erro ao acessar a API'),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  ImplPlanetDataSource.getRandomImages(
-                                      quantityImages);
-                                });
-                              },
-                              child: Text('Atualizar lista.'),
-                            ),
-                          ],
-                        ),
-                      ],
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.data == null || snapshot.hasError) {
+                    return HandleError(
+                      onPressed: () {
+                        setState(() {
+                          ImplPlanetDataSource.getRandomImages(
+                            quantityImages,
+                          );
+                        });
+                      },
                     );
-                  case ConnectionState.active:
-                  case ConnectionState.waiting:
-                    return Container(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                  } else {
+                    return ListViewImages(
+                      quantityImages: quantityImages,
+                      snapshot: snapshot,
+                      onRefresh: () {
+                        setState(() {
+                          quantityImages = 20;
+                        });
+                        return ImplPlanetDataSource.getRandomImages(
+                            quantityImages);
+                      },
                     );
-                  default:
-                    return Container();
+                  }
+                } else {
+                  return const Loading();
                 }
               },
             ),

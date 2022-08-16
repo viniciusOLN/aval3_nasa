@@ -1,8 +1,9 @@
 import 'package:aval3_nasa/app/data/models/image_planetary_model.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:aval3_nasa/app/pages/imagepage/widgets/infos_image.dart';
 import 'package:flutter/material.dart';
+import '../../utils/widgets/image_widget.dart';
 
-class ImagePage extends StatelessWidget {
+class ImagePage extends StatefulWidget {
   final ImageUniverse planetInfos;
   const ImagePage({
     Key? key,
@@ -10,49 +11,30 @@ class ImagePage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ImagePage> createState() => _ImagePageState();
+}
+
+class _ImagePageState extends State<ImagePage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(planetInfos.title),
-      ),
+      appBar: AppBar(title: Text(widget.planetInfos.title)),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CachedNetworkImage(
-              colorBlendMode: BlendMode.color,
-              fit: BoxFit.cover,
-              imageUrl: planetInfos.url,
-              placeholder: (context, url) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: CircularProgressIndicator(),
-                    ),
-                  ],
-                );
-              },
-              errorWidget: (context, url, error) {
-                print(error);
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 100),
-                    Text('😥'),
-                    Text('Erro ao carregar imagem'),
-                    SizedBox(height: 100),
-                  ],
-                );
-              },
+            ImageWidget(
+              url: widget.planetInfos.url,
+              boxFit: BoxFit.cover,
+              sizedBoxLenght: 100,
+              isHomepage: false,
             ),
-            Text(planetInfos.title),
-            Text(planetInfos.date),
-            Text(planetInfos.explanation),
+            const SizedBox(height: 10),
+            InfosImage(
+              title: widget.planetInfos.title,
+              date: widget.planetInfos.date,
+              explanation: widget.planetInfos.explanation,
+            ),
           ],
         ),
       ),

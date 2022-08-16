@@ -15,10 +15,10 @@ class ImageUniverse {
 
   factory ImageUniverse.fromJson(Map<String, dynamic> json) {
     return ImageUniverse(
-      url: json['url'],
-      title: json['title'],
-      date: json['date'],
-      explanation: json['explanation'],
+      url: json['url'] ?? '',
+      title: json['title'] ?? 'Erro ao obter o nome',
+      date: json['date'] ?? 'Não informado',
+      explanation: json['explanation'] ?? 'Não informado',
       copyright: json['copyright'] ?? 'Não informado',
     );
   }

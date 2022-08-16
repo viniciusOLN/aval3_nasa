@@ -23,9 +23,9 @@ class PlanetDatasource {
       '${ApiAdresses.planetsApi}?api_key=${ApiAdresses.apiKey}',
     );
 
-    final json = jsonDecode(utf8.decode(response.bodyBytes));
+    final jsonRes = json.decode(response.body);
 
-    return ImageUniverse.fromJson(json);
+    return ImageUniverse.fromJson(jsonRes);
   }
 
   static Future _requisition(String query) async {
