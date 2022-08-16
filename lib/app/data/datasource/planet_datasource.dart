@@ -6,15 +6,9 @@ import 'package:http/http.dart' as http;
 
 class PlanetDatasource {
   static Future getRandomImages(int numImages) async {
-    Uri url = Uri.parse(
+    http.Response response = await _requisition(
       '${ApiAdresses.planetsApi}?api_key=${ApiAdresses.apiKey}&count=$numImages',
     );
-
-    http.Response response = await http.get(url);
-
-    if (response.statusCode != 200) {
-      throw Exception('Erro ao tentar conseguir as imagens.');
-    }
 
     List<ImageUniverse> listPlanets = [];
 
@@ -22,5 +16,26 @@ class PlanetDatasource {
     json.map((item) => listPlanets.add(ImageUniverse.fromJson(item))).toList();
 
     return listPlanets;
+  }
+
+  static Future getRandomImage() async {
+    http.Response response = await _requisition(
+      '${ApiAdresses.planetsApi}?api_key=${ApiAdresses.apiKey}',
+    );
+
+    final json = jsonDecode(utf8.decode(response.bodyBytes));
+
+    return ImageUniverse.fromJson(json);
+  }
+
+  static Future _requisition(String query) async {
+    Uri url = Uri.parse(query);
+
+    http.Response response = await http.get(url);
+
+    if (response.statusCode != 200) {
+      throw Exception('Erro ao tentar conseguir as imagens.');
+    }
+    return response;
   }
 }
