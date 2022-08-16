@@ -15,7 +15,8 @@ class ImageUniverse {
 
   factory ImageUniverse.fromJson(Map<String, dynamic> json) {
     return ImageUniverse(
-      url: json['url'] ?? '',
+      url: json['url'] ??
+          'https://thumbs.dreamstime.com/z/error-message-creative-design-48389035.jpg',
       title: json['title'] ?? 'Erro ao obter o nome',
       date: json['date'] ?? 'Não informado',
       explanation: json['explanation'] ?? 'Não informado',

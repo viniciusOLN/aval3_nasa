@@ -23,10 +23,10 @@ class CardTile extends StatelessWidget {
       child: Stack(
         children: [
           Card(
-            elevation: 12,
+            elevation: 20,
             child: SizedBox(
               width: double.infinity,
-              height: 200,
+              height: 196,
               child: ImageWidget(
                 url: infosPlanet.url,
                 boxFit: BoxFit.fill,

@@ -18,14 +18,14 @@ class PlanetDatasource {
     return listPlanets;
   }
 
-  static Future getRandomImage() async {
+  static Future<ImageUniverse> getRandomImage() async {
     http.Response response = await _requisition(
       '${ApiAdresses.planetsApi}?api_key=${ApiAdresses.apiKey}',
     );
 
-    final jsonRes = json.decode(response.body);
+    final json = jsonDecode(utf8.decode(response.bodyBytes));
 
-    return ImageUniverse.fromJson(jsonRes);
+    return ImageUniverse.fromJson(json);
   }
 
   static Future _requisition(String query) async {
