@@ -1,40 +1,34 @@
-import 'dart:math';
-
 import 'package:aval3_nasa/app/data/datasource/planet_datasource.dart';
 import 'package:aval3_nasa/app/data/models/image_planetary_model.dart';
 
 class ImplPlanetDataSource {
+  static String defaultUrl = 'https://apod.nasa.gov/apod/image/';
+
   static Future getRandomImages(int numImages) async {
     List<ImageUniverse> listPlanets = await PlanetDatasource.getRandomImages(
       numImages,
     );
 
-    List<ImageUniverse> newListPlanets = [];
-
-    newListPlanets = [...listPlanets];
-
     List<int> positionsWrongImages = [];
 
-    for (int i = 0; i < newListPlanets.length; i++) {
-      if (!(newListPlanets[i]
-          .url
-          .contains('https://apod.nasa.gov/apod/image/'))) {
+    for (int i = 0; i < listPlanets.length; i++) {
+      if (!listPlanets[i].url.contains(defaultUrl)) {
         positionsWrongImages.add(i);
       }
     }
 
     for (int i = 0; i < positionsWrongImages.length; i++) {
-      newListPlanets[positionsWrongImages[i]] = await verifyVideos(
-        newListPlanets[positionsWrongImages[i]],
+      listPlanets[positionsWrongImages[i]] = await verifyVideos(
+        listPlanets[positionsWrongImages[i]],
       );
     }
 
-    return newListPlanets;
+    return listPlanets;
   }
 
   static Future<ImageUniverse> verifyVideos(ImageUniverse currentImage) async {
     ImageUniverse copyImage = currentImage;
-    while (!(copyImage.url.contains('https://apod.nasa.gov/apod/image/'))) {
+    while (!(copyImage.url.contains(defaultUrl))) {
       copyImage = await PlanetDatasource.getRandomImage();
     }
 
