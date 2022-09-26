@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../data/repository/planet_repository.dart';
 import '../../utils/widgets/loading_widget.dart';
 import 'widgets/appbar_widget.dart';
-import 'widgets/quantity_options_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,7 +13,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int quantityImages = 20;
+  int initQuantity = 5;
+  int quantityImages = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -22,32 +22,13 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBarWidget(
         onPressed: () {
           setState(() {
-            quantityImages = 20;
+            quantityImages = initQuantity;
             ImplPlanetDataSource.getRandomImages(quantityImages);
           });
         },
       ),
       body: Column(
         children: [
-          const SizedBox(height: 20),
-          Text('Quantidade de imagens: $quantityImages'),
-          QuantityOptions(
-            onPressedPlus: () {
-              if (quantityImages < 20) {
-                setState(() {
-                  quantityImages++;
-                });
-              }
-            },
-            onPressedRemove: () {
-              if (quantityImages > 1) {
-                setState(() {
-                  quantityImages--;
-                });
-              }
-            },
-          ),
-          const SizedBox(height: 30),
           Expanded(
             child: FutureBuilder(
               future: ImplPlanetDataSource.getRandomImages(quantityImages),
@@ -69,10 +50,11 @@ class _HomePageState extends State<HomePage> {
                       snapshot: snapshot,
                       onRefresh: () {
                         setState(() {
-                          quantityImages = 20;
+                          quantityImages = initQuantity;
                         });
                         return ImplPlanetDataSource.getRandomImages(
-                            quantityImages);
+                          quantityImages,
+                        );
                       },
                     );
                   }

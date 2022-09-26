@@ -10,15 +10,15 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       title: const Text('Galeria do Universo'),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.group),
-          onPressed: () async {
-            return await showDialog(
-              context: context,
-              builder: (context) => const TeamPage(),
-            );
-          },
-        ),
+        // IconButton(
+        //   icon: const Icon(Icons.group),
+        //   onPressed: () async {
+        //     return await showDialog(
+        //       context: context,
+        //       builder: (context) => const TeamPage(),
+        //     );
+        //   },
+        // ),
         IconButton(
           onPressed: () => onPressed(),
           icon: const Icon(Icons.refresh),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../utils/format_date.dart';
+
 class ContainerInfos extends StatelessWidget {
   final String title;
   final String date;
@@ -22,11 +24,12 @@ class ContainerInfos extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
+          const SizedBox(height: 5),
           Text(
-            date,
-            style: TextStyle(color: Colors.white),
+            FormatDate.getFormattedDate(date),
+            style: const TextStyle(color: Colors.white),
           ),
         ],
       ),

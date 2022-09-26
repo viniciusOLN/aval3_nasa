@@ -29,7 +29,7 @@ class CardTile extends StatelessWidget {
               height: 196,
               child: ImageWidget(
                 url: infosPlanet.url,
-                boxFit: BoxFit.fill,
+                boxFit: BoxFit.cover,
                 sizedBoxLenght: 50,
                 isHomepage: true,
               ),

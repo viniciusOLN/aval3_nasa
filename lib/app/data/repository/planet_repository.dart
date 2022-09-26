@@ -20,15 +20,20 @@ class ImplPlanetDataSource {
     for (int i = 0; i < positionsWrongImages.length; i++) {
       listPlanets[positionsWrongImages[i]] = await verifyVideos(
         listPlanets[positionsWrongImages[i]],
+        listPlanets,
       );
     }
 
     return listPlanets;
   }
 
-  static Future<ImageUniverse> verifyVideos(ImageUniverse currentImage) async {
+  static Future<ImageUniverse> verifyVideos(
+    ImageUniverse currentImage,
+    List list,
+  ) async {
     ImageUniverse copyImage = currentImage;
-    while (!(copyImage.url.contains(defaultUrl))) {
+    while (!(copyImage.url.contains(defaultUrl)) ||
+        list.contains(copyImage.title)) {
       copyImage = await PlanetDatasource.getRandomImage();
     }
 

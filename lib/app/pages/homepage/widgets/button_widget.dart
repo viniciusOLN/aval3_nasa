@@ -13,7 +13,10 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () => onPressed(),
-      icon: Icon(icon),
+      icon: Icon(
+        icon,
+        size: 40,
+      ),
     );
   }
 }

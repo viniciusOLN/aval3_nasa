@@ -15,11 +15,13 @@ class QuantityOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ButtonWidget(
           onPressed: () => onPressedPlus(),
           icon: Icons.add,
         ),
+        const SizedBox(width: 10),
         ButtonWidget(
           onPressed: () => onPressedRemove(),
           icon: Icons.remove,
